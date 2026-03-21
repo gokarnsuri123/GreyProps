@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Grey? — GreyProps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --ease: cubic-bezier(0.16, 1, 0.3, 1); }
+
+html, body { width: 100%; overflow-x: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #080808; color: #686868;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* CURSOR */
+#cursor {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  width: 10px; height: 10px; background: #fff; border-radius: 50%;
+  pointer-events: none; transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease), height 0.3s var(--ease);
+  mix-blend-mode: difference;
+}
+#cursor.big { width: 56px; height: 56px; }
+
+/* NOISE */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.04; pointer-events: none;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 22px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  mix-blend-mode: difference;
+}
+.back-link {
+  font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: #fff;
+  text-decoration: none; display: flex; align-items: center; gap: 10px;
+  transition: gap 0.3s var(--ease);
+}
+.back-link:hover { gap: 16px; }
+.nav-wordmark {
+  font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 800;
+  letter-spacing: -0.02em; color: #fff; text-decoration: none;
+}
+
+/* ── S1: INTRO — tightened ── */
+#s1 {
+  height: 88vh; /* was 100vh */
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  position: relative; overflow: hidden; text-align: center;
+}
+.s1-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, #1a1a1a 0%, #080808 100%);
+}
+.ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.04);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  animation: spin linear infinite;
+}
+.ring:nth-child(1) { width: 260px;  height: 260px;  animation-duration: 18s; }
+.ring:nth-child(2) { width: 440px;  height: 440px;  animation-duration: 28s; animation-direction: reverse; border-color: rgba(255,255,255,0.025); }
+.ring:nth-child(3) { width: 640px;  height: 640px;  animation-duration: 40s; }
+.ring:nth-child(4) { width: 860px;  height: 860px;  animation-duration: 55s; animation-direction: reverse; border-color: rgba(255,255,255,0.015); }
+.ring:nth-child(5) { width: 1100px; height: 1100px; animation-duration: 70s; }
+.ring::before {
+  content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; background: rgba(255,255,255,0.25); border-radius: 50%;
+}
+@keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+.s1-inner { position: relative; z-index: 2; }
+.s1-q {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(4rem, 13vw, 11rem);
+  font-weight: 800; letter-spacing: -0.05em; line-height: 0.88;
+  color: #fff; opacity: 0; animation: fadeUp 1.2s var(--ease) 0.2s forwards;
+}
+/* "Grey?" — dark filled grey, NOT outline */
+.s1-q .grey-word { color: #3a3a3a; display: block; }
+
+.s1-scroll {
+  margin-top: 48px; font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #333;
+  opacity: 0; animation: fadeUp 1s var(--ease) 1s forwards;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.scroll-line {
+  width: 1px; height: 36px;
+  background: linear-gradient(to bottom, #444, transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+/* ── S2: STATEMENT — tightened ── */
+#s2 {
+  padding: 80px 8vw; /* was 120px */
+  position: relative; overflow: hidden;
+  border-top: 1px solid #111;
+}
+.s2-bg-text {
+  position: absolute; right: -2vw; top: 50%; transform: translateY(-50%);
+  font-family: 'Syne', sans-serif; font-size: 26vw; font-weight: 800;
+  letter-spacing: -0.06em; color: #111;
+  user-select: none; pointer-events: none; line-height: 1;
+}
+.s2-content { position: relative; z-index: 2; max-width: 860px; }
+.s2-eyebrow {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #404040; margin-bottom: 32px;
+  display: flex; align-items: center; gap: 12px;
+}
+.s2-eyebrow::before { content: ''; width: 24px; height: 1px; background: #2a2a2a; }
+.s2-lines { display: flex; flex-direction: column; }
+.s2-line {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 4.6rem);
+  font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; overflow: hidden;
+}
+.s2-line span { display: block; transform: translateY(100%); transition: transform 0.9s var(--ease); }
+.s2-line.in span { transform: translateY(0); }
+/* all lines filled, just different grey tones */
+.s2-line.light span { color: #d8d8d8; }
+.s2-line.mid span   { color: #4a4a4a; }
+.s2-line.dark span  { color: #242424; }
+.s2-sub {
+  margin-top: 40px; font-size: 1.05rem; font-weight: 300;
+  line-height: 1.9; color: #686868; max-width: 500px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.9s var(--ease) 0.45s, transform 0.9s var(--ease) 0.45s;
+}
+.s2-sub.in { opacity: 1; transform: none; }
+
+/* ── S3: STATS SPLIT — tightened ── */
+#s3 {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #111; overflow: hidden;
+}
+.s3-left {
+  background: #0e0e0e; padding: 72px 6vw; /* was 100px */
+  display: flex; flex-direction: column; justify-content: center;
+  border-right: 1px solid #111;
+}
+.s3-num {
+  font-family: 'Syne', sans-serif; font-size: 5.5rem; font-weight: 800;
+  letter-spacing: -0.06em; color: #151515; line-height: 1; margin-bottom: 24px;
+}
+.s3-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em;
+  color: #e0e0e0; line-height: 1.1; margin-bottom: 24px;
+}
+/* "black." = filled dark grey, not outline */
+.s3-heading .ghost { color: #2e2e2e; }
+.s3-body { font-size: 1rem; font-weight: 300; line-height: 1.9; color: #686868; }
+.s3-right {
+  background: #0a0a0a; padding: 72px 6vw;
+  display: flex; flex-direction: column; justify-content: center; gap: 36px;
+}
+.s3-stat { padding-bottom: 32px; border-bottom: 1px solid #151515; }
+.s3-stat:last-child { border-bottom: none; padding-bottom: 0; }
+.s3-stat-val {
+  font-family: 'Syne', sans-serif; font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 800; letter-spacing: -0.04em; color: #e0e0e0; line-height: 1; margin-bottom: 8px;
+}
+.s3-stat-val .unit { font-size: 0.45em; color: #363636; vertical-align: super; }
+.s3-stat-label { font-size: 0.95rem; font-weight: 300; color: #585858; line-height: 1.65; }
+
+/* ── S4: MARQUEE ── */
+#s4 {
+  overflow: hidden; border-top: 1px solid #111; border-bottom: 1px solid #111; background: #080808;
+}
+.marquee-track { display: flex; width: max-content; animation: marquee 20s linear infinite; }
+.marquee-track.reverse { animation-direction: reverse; animation-duration: 24s; }
+.marquee-inner {
+  display: flex; align-items: center; padding: 22px 0; border-bottom: 1px solid #111;
+}
+.marquee-inner:last-child { border-bottom: none; }
+.marquee-item {
+  font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+  letter-spacing: -0.01em; white-space: nowrap; padding: 0 36px;
+  color: #222; display: flex; align-items: center; gap: 36px;
+}
+.marquee-item.bright { color: #aaa; }
+.marquee-sep { width: 4px; height: 4px; border-radius: 50%; background: #2a2a2a; flex-shrink: 0; }
+.marquee-sep.bright { background: #555; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── S5: MANIFESTO — tightened ── */
+#s5 {
+  padding: 96px 8vw; /* was 160px */
+  border-top: 1px solid #111; overflow: hidden;
+}
+.manifesto-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 64px; flex-wrap: wrap; gap: 32px; /* was 120px */
+}
+.manifesto-label {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #333;
+}
+.manifesto-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 7rem); /* was 8rem */
+  font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; color: #e0e0e0; text-align: right;
+}
+/* "believe" = filled dark grey, readable */
+.manifesto-title .stroke { color: #252525; }
+
+.manifesto-items { display: flex; flex-direction: column; }
+.m-item {
+  display: grid; grid-template-columns: 56px 1fr 1fr;
+  gap: 36px; align-items: start;
+  padding: 44px 0; /* was 52px */
+  border-top: 1px solid #111;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.m-item.in { opacity: 1; transform: none; }
+.m-item:last-child { border-bottom: 1px solid #111; }
+.m-num {
+  font-family: 'Syne', sans-serif; font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.14em; color: #2e2e2e; padding-top: 5px;
+}
+.m-heading {
+  font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 2.3vw, 2rem);
+  font-weight: 800; letter-spacing: -0.035em; color: #e0e0e0; line-height: 1.1;
+}
+/* em = filled mid grey */
+.m-heading em { font-style: normal; color: #505050; }
+.m-body { font-size: 0.98rem; font-weight: 300; line-height: 1.95; color: #626262; padding-top: 4px; }
+
+/* ── S6: CLOSING — tightened ── */
+#s6 {
+  min-height: 70vh; /* was 100vh */
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center; text-align: center;
+  position: relative; overflow: hidden; border-top: 1px solid #111;
+  padding: 80px 40px;
+}
+.s6-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 60%, #161616 0%, #080808 100%);
+}
+.s6-counter {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 40vw; font-weight: 800;
+  letter-spacing: -0.06em; color: #0e0e0e; /* filled very dark, not outline */
+  user-select: none; pointer-events: none; line-height: 1;
+}
+.s6-inner { position: relative; z-index: 2; }
+.s6-sub {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #333; margin-bottom: 28px;
+  opacity: 0; transition: opacity 1s var(--ease);
+}
+.s6-sub.in { opacity: 1; }
+.s6-big {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 8vw, 8rem); font-weight: 800; letter-spacing: -0.05em;
+  line-height: 0.9; color: #e0e0e0;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 1.2s var(--ease) 0.1s, transform 1.2s var(--ease) 0.1s;
+}
+.s6-big.in { opacity: 1; transform: none; }
+/* "build" = filled dark grey */
+.s6-big .ghost { color: #2c2c2c; }
+.s6-cta {
+  margin-top: 44px;
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #e0e0e0; text-decoration: none;
+  border: 1px solid #252525; border-radius: 100px; padding: 14px 32px;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 1s var(--ease) 0.4s, transform 1s var(--ease) 0.4s, border-color 0.3s, background 0.3s, gap 0.3s var(--ease);
+}
+.s6-cta.in { opacity: 1; transform: none; }
+.s6-cta:hover { border-color: #555; background: rgba(255,255,255,0.04); gap: 18px; }
+
+/* FOOTER */
+.wg-footer {
+  padding: 24px 48px; border-top: 1px solid #111;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.wg-footer-logo { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 800; letter-spacing: -0.02em; color: #2a2a2a; text-decoration: none; }
+.wg-footer-tag { font-size: 0.72rem; font-weight: 300; color: #222; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+
+@media (max-width: 768px) {
+  nav { padding: 18px 24px; }
+  #s2 { padding: 64px 6vw; }
+  #s3 { grid-template-columns: 1fr; }
+  .s3-left { border-right: none; border-bottom: 1px solid #111; }
+  #s5 { padding: 72px 6vw; }
+  .m-item { grid-template-columns: 40px 1fr; }
+  .m-body { grid-column: 2; }
+  .manifesto-title { text-align: left; }
+  #s6 { min-height: auto; padding: 80px 24px; }
+  .wg-footer { padding: 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <a href="index.html" class="back-link">← Back</a>
+  <a href="index.html" class="nav-wordmark">GreyProps</a>
+</nav>
+
+<section id="s1">
+  <div class="s1-bg">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div>
+  </div>
+  <div class="s1-inner">
+    <h1 class="s1-q">Why<span class="grey-word">Grey?</span></h1>
+    <div class="s1-scroll"><div class="scroll-line"></div>Scroll</div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="s2-bg-text">G</div>
+  <div class="s2-content">
+    <p class="s2-eyebrow">The answer</p>
+    <div class="s2-lines">
+      <div class="s2-line light"><span>Black is finished.</span></div>
+      <div class="s2-line dark"><span>White is pristine.</span></div>
+      <div class="s2-line mid"><span>Grey is where</span></div>
+      <div class="s2-line light"><span>the work lives.</span></div>
+    </div>
+    <p class="s2-sub">Between the idea and the first flight. Between the components on a bench and a drone that actually works. That's where we are. Every build. Every time.</p>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="s3-left reveal-block">
+    <div class="s3-num">01</div>
+    <h2 class="s3-heading">Carbon fibre<br>isn't <span class="ghost">black.</span><br>It's grey.</h2>
+    <p class="s3-body">Every high-performance drone frame is woven from carbon fibre. Not the glossy black of a product render — the raw, matte, structural grey of a material that handles stress, vibration, and impact without asking for credit.<br><br>We named ourselves after what we build with.</p>
+  </div>
+  <div class="s3-right reveal-block">
+    <div class="s3-stat">
+      <div class="s3-stat-val">450<span class="unit">mm</span></div>
+      <div class="s3-stat-label">F450 wheelbase — our most-built frame. Every millimetre matters.</div>
+    </div>
+    <div class="s3-stat">
+      <div class="s3-stat-val">0</div>
+      <div class="s3-stat-label">Parts we stock that we haven't personally flown or built with.</div>
+    </div>
+    <div class="s3-stat">
+      <div class="s3-stat-val">∞</div>
+      <div class="s3-stat-label">Custom configs we'll consider. If it flies, we're interested.</div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="marquee-inner">
+    <div class="marquee-track">
+      <div class="marquee-item bright">F450 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">F550 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">S500 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">S550 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Complete Builds <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Workshops <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Flower Dropping <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Custom Frames <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">F450 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">F550 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">S500 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">S550 <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Complete Builds <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Workshops <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Flower Dropping <span class="marquee-sep bright"></span></div>
+      <div class="marquee-item bright">Custom Frames <span class="marquee-sep bright"></span></div>
+    </div>
+  </div>
+  <div class="marquee-inner">
+    <div class="marquee-track reverse">
+      <div class="marquee-item">Flight Controller <span class="marquee-sep"></span></div>
+      <div class="marquee-item">ESC Stack <span class="marquee-sep"></span></div>
+      <div class="marquee-item">LiPo Battery <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Motor Mount <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Propeller <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Carbon Arms <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Landing Gear <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Payload Bay <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Flight Controller <span class="marquee-sep"></span></div>
+      <div class="marquee-item">ESC Stack <span class="marquee-sep"></span></div>
+      <div class="marquee-item">LiPo Battery <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Motor Mount <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Propeller <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Carbon Arms <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Landing Gear <span class="marquee-sep"></span></div>
+      <div class="marquee-item">Payload Bay <span class="marquee-sep"></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="manifesto-header">
+    <p class="manifesto-label">Our manifesto</p>
+    <h2 class="manifesto-title">We<br><span class="stroke">believe</span><br>this.</h2>
+  </div>
+  <div class="manifesto-items">
+    <div class="m-item">
+      <span class="m-num">I</span>
+      <h3 class="m-heading">The grey zone is<br><em>where mastery</em><br>happens.</h3>
+      <p class="m-body">Nobody becomes a builder in the extremes. Not in theory (white), not in failure (black). The grey zone is where you solder a joint for the fifteenth time until it's right. That's our zone. We live there permanently.</p>
+    </div>
+    <div class="m-item">
+      <span class="m-num">II</span>
+      <h3 class="m-heading">A drone that<br><em>looks good</em><br>isn't enough.</h3>
+      <p class="m-body">We've seen too many builds that photograph beautifully and fly for three minutes. We care about what happens after takeoff — centre of gravity, motor temperature, vibration harmonics, flight time. The unglamorous stuff that actually matters.</p>
+    </div>
+    <div class="m-item">
+      <span class="m-num">III</span>
+      <h3 class="m-heading">Small is<br><em>a feature,</em><br>not a bug.</h3>
+      <p class="m-body">We're not a warehouse. We don't have a ticket system or a support bot. When you message GreyProps, the person who replies is the same person who built the thing you're asking about. That's the point.</p>
+    </div>
+    <div class="m-item">
+      <span class="m-num">IV</span>
+      <h3 class="m-heading">Teach it.<br><em>Don't just</em><br>sell it.</h3>
+      <p class="m-body">Our workshops exist because we hate the idea of someone flying a machine they don't understand. A build you assembled yourself, with your own hands, is a build you can fix. Knowledge matters more than the box it came in.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="s6-bg"></div>
+  <div class="s6-counter">G</div>
+  <div class="s6-inner">
+    <p class="s6-sub">That's why grey.</p>
+    <h2 class="s6-big">Now let's<br><span class="ghost">build</span><br>something.</h2>
+    <a href="index.html#contact" class="s6-cta">Get in touch →</a>
+  </div>
+</section>
+
+<footer class="wg-footer">
+  <a href="index.html" class="wg-footer-logo">GreyProps</a>
+  <span class="wg-footer-tag">Builds that take off.</span>
+  <span class="wg-footer-tag">© 2025 GreyProps</span>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+document.querySelectorAll('.s2-line').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.11) + 's';
+  io.observe(el);
+});
+document.querySelectorAll('.s2-sub').forEach(el => io.observe(el));
+
+document.querySelectorAll('.reveal-block').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)';
+  io.observe(el);
+});
+
+document.querySelectorAll('.m-item').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.07) + 's';
+  io.observe(el);
+});
+
+document.querySelectorAll('.s6-sub, .s6-big, .s6-cta').forEach(el => io.observe(el));
+
+// Parallax rings on scroll
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.querySelectorAll('.ring').forEach((ring, i) => {
+    ring.style.transform = `translate(-50%, calc(-50% + ${y * (i + 1) * 0.05}px))`;
+  });
+}, { passive: true });
+</script>
+</body>
+</html>

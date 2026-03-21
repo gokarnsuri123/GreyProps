@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreyProps — Builds That Take Off</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0c0c0c;
+  --bg2:      #111111;
+  --bg3:      #161616;
+  --bg4:      #1c1c1c;
+  --bg5:      #242424;
+  --stroke:   rgba(255,255,255,0.06);
+  --stroke2:  rgba(255,255,255,0.10);
+  --stroke3:  rgba(255,255,255,0.16);
+  --dim:      #363636;
+  --mid:      #5e5e5e;
+  --soft:     #909090;
+  --bright:   #b8b8b8;
+  --white:    #e8e8e8;
+  --ease:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg); color: var(--soft);
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-thumb { background: var(--bg5); }
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03; pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(12,12,12,0.88);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--stroke);
+}
+.logo {
+  font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 800;
+  letter-spacing: -0.02em; color: var(--white); text-decoration: none;
+  display: flex; align-items: center; gap: 9px;
+}
+.logo-dot {
+  width: 6px; height: 6px; background: var(--soft); border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--dim);
+  animation: pulseDot 3s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { box-shadow: 0 0 0 1.5px var(--dim); }
+  50%      { box-shadow: 0 0 0 3px var(--bg5); }
+}
+.nav-links { list-style: none; display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 0.8rem; font-weight: 500; color: var(--mid);
+  text-decoration: none; letter-spacing: 0.01em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  color: var(--white) !important; background: var(--bg4) !important;
+  border: 1px solid var(--stroke2) !important; padding: 8px 20px; border-radius: 6px;
+  font-weight: 600 !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease) !important;
+}
+.nav-cta:hover { background: var(--bg5) !important; border-color: var(--dim) !important; transform: translateY(-1px); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; padding-top: 60px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding-bottom: 72px; padding-left: 48px; padding-right: 48px;
+  position: relative; overflow: hidden;
+}
+
+/* drifting grid */
+.hero-grid {
+  position: absolute; inset: -80px;
+  background-image: linear-gradient(var(--stroke) 1px, transparent 1px), linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
+  background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black 20%, transparent 100%);
+  pointer-events: none;
+  animation: gridDrift 20s ease-in-out infinite alternate;
+}
+@keyframes gridDrift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(16px, 12px); }
+}
+
+/* floating glow */
+.hero-glow {
+  position: absolute; top: 28%; left: 46%; transform: translate(-50%, -50%);
+  width: 700px; height: 420px;
+  background: radial-gradient(ellipse, rgba(160,160,160,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  animation: glowFloat 8s ease-in-out infinite alternate;
+}
+@keyframes glowFloat {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  to   { transform: translate(-46%, -54%) scale(1.12); opacity: 1; }
+}
+
+.hero-label {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--mid); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: up 0.7s var(--ease) 0.1s forwards;
+}
+.hero-label::before {
+  content: ''; width: 32px; height: 1px; background: var(--dim);
+  display: inline-block; flex-shrink: 0;
+  animation: lineGrow 0.6s var(--ease) 0.4s both;
+}
+@keyframes lineGrow { from { width: 0; } to { width: 32px; } }
+
+.hero-h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(3.6rem, 9vw, 9.5rem); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em;
+  color: var(--white);
+  opacity: 0; animation: up 1s var(--ease) 0.15s forwards;
+}
+/* "take off." = dark grey filled, readable */
+.hero-h1 .line2 { color: #3a3a3a; }
+
+.hero-rule {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, var(--stroke3), transparent 60%);
+  margin: 52px 0 44px;
+  opacity: 0; animation: ruleExpand 0.8s var(--ease) 0.5s forwards;
+}
+@keyframes ruleExpand {
+  from { opacity: 0; transform: scaleX(0); transform-origin: left; }
+  to   { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+.hero-foot {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 32px;
+  opacity: 0; animation: up 0.7s var(--ease) 0.55s forwards;
+}
+.hero-desc { font-size: 1rem; font-weight: 300; line-height: 1.85; color: var(--mid); max-width: 440px; }
+.hero-desc strong { color: var(--soft); font-weight: 400; }
+.hero-actions { display: flex; gap: 12px; align-items: center; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 0.01em; text-decoration: none; cursor: pointer; border: none;
+  display: inline-block; border-radius: 8px; padding: 13px 26px; transition: all 0.25s var(--ease);
+}
+.btn-fill { background: var(--white); color: #0c0c0c; }
+.btn-fill:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255,255,255,0.08); }
+.btn-ghost { background: transparent; color: var(--bright); border: 1px solid var(--stroke2); }
+.btn-ghost:hover { border-color: var(--dim); background: var(--bg3); }
+
+/* ── SECTION BASE ── */
+.section { padding: 96px 48px; border-top: 1px solid var(--stroke); }
+.s-eyebrow {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--mid); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.s-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--dim); display: inline-block; flex-shrink: 0; }
+.s-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 4rem); font-weight: 800; letter-spacing: -0.035em;
+  color: var(--white); line-height: 0.95;
+}
+/* section title second line = filled mid grey, NOT outline */
+.s-title span { color: #484848; }
+
+/* ── SERVICES ── */
+#services { background: var(--bg2); }
+.services-top { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: end; margin-bottom: 60px; }
+.services-top p { font-size: 0.95rem; font-weight: 300; line-height: 1.85; color: var(--mid); }
+.svc-row { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--stroke); border-radius: 12px; overflow: hidden; }
+.svc {
+  padding: 36px 28px; border-right: 1px solid var(--stroke);
+  display: flex; flex-direction: column; gap: 16px;
+  transition: background 0.35s var(--ease); position: relative;
+}
+/* animated bottom bar on hover */
+.svc::after {
+  content: ''; position: absolute; bottom: 0; left: 28px; right: 28px; height: 1px;
+  background: var(--soft); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.svc:hover::after { transform: scaleX(1); }
+.svc:last-child { border-right: none; }
+.svc:hover { background: var(--bg3); }
+.svc-num { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.svc h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--white); line-height: 1.2; }
+.svc p { font-size: 0.88rem; font-weight: 300; line-height: 1.85; color: var(--mid); flex: 1; }
+.svc a {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.01em; color: var(--soft);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px; width: fit-content;
+  transition: color 0.2s, gap 0.2s var(--ease);
+}
+.svc a:hover { color: var(--white); gap: 10px; }
+
+/* ── FRAMES ── */
+#frames { background: var(--bg); }
+.frames-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 52px; flex-wrap: wrap; }
+.frames-top p { font-size: 0.95rem; font-weight: 300; line-height: 1.85; color: var(--mid); max-width: 340px; }
+.frames-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--stroke);
+  border: 1px solid var(--stroke); border-radius: 12px; overflow: hidden;
+}
+.frame {
+  padding: 48px 36px; background: var(--bg);
+  display: flex; flex-direction: column; gap: 16px;
+  position: relative; overflow: hidden; transition: background 0.35s var(--ease);
+}
+.frame:hover { background: var(--bg2); }
+/* big ghost number — filled very dark so it's subtle but not invisible */
+.frame-bg {
+  position: absolute; bottom: -20px; right: -8px;
+  font-family: 'Syne', sans-serif; font-size: 7rem; font-weight: 800;
+  letter-spacing: -0.06em; color: #141414; line-height: 1;
+  pointer-events: none; user-select: none;
+  transition: color 0.35s, transform 0.5s var(--ease);
+}
+.frame:hover .frame-bg { color: #1c1c1c; transform: scale(1.05) translateY(-4px); }
+.frame-tag {
+  display: inline-block; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--mid); border: 1px solid var(--stroke2); border-radius: 4px; padding: 3px 8px; width: fit-content;
+}
+.frame h4 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.025em; color: var(--white); }
+.frame p { font-size: 0.88rem; font-weight: 300; line-height: 1.85; color: var(--mid); flex: 1; max-width: 240px; position: relative; z-index: 1; }
+.frame a {
+  font-size: 0.78rem; font-weight: 600; color: var(--soft); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px; width: fit-content; position: relative; z-index: 1;
+  transition: color 0.2s, gap 0.2s var(--ease);
+}
+.frame a:hover { color: var(--white); gap: 10px; }
+
+/* ── CONTACT ── */
+#contact { background: var(--bg); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 56px; align-items: start; }
+.c-item { padding: 22px 0; border-bottom: 1px solid var(--stroke); display: flex; flex-direction: column; gap: 6px; }
+.c-item:first-child { border-top: 1px solid var(--stroke); }
+.c-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.c-val { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; color: var(--bright); text-decoration: none; transition: color 0.2s; }
+a.c-val:hover { color: var(--white); }
+.c-note { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; color: var(--mid); }
+.c-aside { margin-top: 40px; padding: 24px 28px; background: var(--bg2); border: 1px solid var(--stroke); border-radius: 8px; }
+.c-aside p { font-size: 0.88rem; font-weight: 300; line-height: 1.8; color: var(--mid); }
+.c-aside strong { color: var(--soft); font-weight: 400; }
+
+/* ── FORM ── */
+.cform { display: flex; flex-direction: column; }
+.f-row { padding: 18px 0; border-bottom: 1px solid var(--stroke); display: flex; flex-direction: column; gap: 8px; transition: border-color 0.25s; }
+.f-row:first-child { border-top: 1px solid var(--stroke); }
+.f-row:focus-within { border-color: var(--soft); }
+.f-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); transition: color 0.2s; }
+.f-row:focus-within .f-label { color: var(--soft); }
+.f-row input, .f-row textarea {
+  background: none; border: none; outline: none;
+  font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 400;
+  letter-spacing: -0.01em; color: var(--bright); resize: none; padding: 2px 0; caret-color: var(--soft);
+}
+.f-row textarea { min-height: 100px; }
+.f-row input::placeholder, .f-row textarea::placeholder { color: var(--dim); font-weight: 300; }
+.f-submit {
+  margin-top: 28px; align-self: flex-start;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.01em;
+  background: var(--white); color: #0c0c0c; border: none; padding: 13px 30px; border-radius: 8px; cursor: pointer;
+  transition: background 0.2s, transform 0.22s var(--ease), box-shadow 0.22s;
+}
+.f-submit:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255,255,255,0.07); }
+.f-submit:active { transform: scale(0.99); }
+.f-success { display: none; margin-top: 20px; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--stroke2); border-radius: 8px; font-size: 0.88rem; color: var(--soft); }
+
+/* ── FOOTER ── */
+footer { padding: 28px 48px; border-top: 1px solid var(--stroke); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.foot-logo { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: -0.01em; color: var(--mid); text-decoration: none; display: flex; align-items: center; gap: 7px; }
+.foot-dot { width: 5px; height: 5px; background: var(--dim); border-radius: 50%; display: inline-block; }
+.foot-tag { font-size: 0.78rem; font-weight: 300; color: var(--dim); }
+
+/* ── REVEAL animations ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal.in { opacity: 1; transform: none; }
+/* slide in from left */
+.reveal-left { opacity: 0; transform: translateX(-24px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal-left.in { opacity: 1; transform: none; }
+/* counter up for numbers */
+.num-wrap { overflow: hidden; }
+
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.24s; }
+.d4 { transition-delay: 0.32s; }
+
+@keyframes up   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+
+/* hover lift for section cards */
+.svc, .frame { transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links li:not(:last-child) { display: none; }
+  #hero { padding: 60px 24px 60px; }
+  .section { padding: 72px 24px; }
+  .services-top { grid-template-columns: 1fr; gap: 24px; }
+  .svc-row { grid-template-columns: 1fr 1fr; }
+  .svc { border-right: none; border-bottom: 1px solid var(--stroke); }
+  .svc:last-child { border-bottom: none; }
+  .frames-top { flex-direction: column; }
+  .frames-top p { max-width: 100%; }
+  .frames-row { grid-template-columns: 1fr; }
+  .frame { border-right: none; }
+  .contact-grid { grid-template-columns: 1fr; gap: 52px; }
+  footer { padding: 24px; }
+}
+@media (max-width: 560px) {
+  .svc-row { grid-template-columns: 1fr; }
+  .hero-h1 { letter-spacing: -0.03em; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo"><span class="logo-dot"></span>GreyProps</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#frames">Frames</a></li>
+    <li><a href="why-grey.html">Why Grey?</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <p class="hero-label">Drone Components &amp; Builds</p>
+  <h1 class="hero-h1">Builds that<br><span class="line2">take off.</span></h1>
+  <div class="hero-rule"></div>
+  <div class="hero-foot">
+    <p class="hero-desc">Parts, <strong>complete drone builds</strong>, workshops for hobbyists, and custom flower-dropping drones for events. Small team. Real people. Drones that work.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-fill">Get in touch</a>
+      <a href="#services" class="btn btn-ghost">What we do</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="services-top">
+    <div>
+      <p class="s-eyebrow reveal">What we do</p>
+      <h2 class="s-title reveal d1">Four things.<br><span>Done right.</span></h2>
+    </div>
+    <p class="reveal d2">We started building drones because we couldn't find anyone doing it right. Now we sell the parts, build the whole thing, run workshops, and make custom drones for events.</p>
+  </div>
+  <div class="svc-row">
+    <div class="svc reveal">
+      <span class="svc-num">01</span><h3>Complete Builds</h3>
+      <p>Tell us what you need. We source, assemble, and tune the whole drone — flight-ready before it gets to you.</p>
+      <a href="#contact">Enquire →</a>
+    </div>
+    <div class="svc reveal d1">
+      <span class="svc-num">02</span><h3>Frames &amp; Parts</h3>
+      <p>F450, F550, S500, S550 and custom. For builders who want the right components from the start.</p>
+      <a href="#frames">See frames →</a>
+    </div>
+    <div class="svc reveal d2">
+      <span class="svc-num">03</span><h3>Workshops</h3>
+      <p>Hands-on sessions. You solder, assemble, and tune your own drone. You leave with something that flies.</p>
+      <a href="#contact">Book a session →</a>
+    </div>
+    <div class="svc reveal d3">
+      <span class="svc-num">04</span><h3>Flower Dropping</h3>
+      <p>Custom payload release drones for weddings and ceremonies. We build, you fly — or we operate on the day.</p>
+      <a href="#contact">Ask us →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="frames">
+  <div class="frames-top">
+    <div>
+      <p class="s-eyebrow reveal">Frames &amp; Parts</p>
+      <h2 class="s-title reveal d1">Parts worth<br><span>building with.</span></h2>
+    </div>
+    <p class="reveal d2">We stock frames that hold up under real use — not the ones that look fine until they snap. Custom requirements are always welcome.</p>
+  </div>
+  <div class="frames-row">
+    <div class="frame reveal">
+      <span class="frame-bg">450</span><span class="frame-tag">Quad</span>
+      <h4>F450</h4>
+      <p>The go-to quad frame. Lightweight, tough, and forgiving — popular with beginners and experienced builders alike.</p>
+      <a href="#contact">Enquire →</a>
+    </div>
+    <div class="frame reveal d1">
+      <span class="frame-bg">550</span><span class="frame-tag">Hex</span>
+      <h4>F550</h4>
+      <p>Six rotors for extra lift and stability. Built for situations where you need more power and more margin.</p>
+      <a href="#contact">Enquire →</a>
+    </div>
+    <div class="frame reveal d2">
+      <span class="frame-bg">S500</span><span class="frame-tag">Stretch</span>
+      <h4>S500 / S550</h4>
+      <p>Stretch frames with wider motor spacing. Better airflow, more clearance. A favourite for custom builds.</p>
+      <a href="#contact">Enquire →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <p class="s-eyebrow reveal">Contact</p>
+  <h2 class="s-title reveal d1">Tell us about<br><span>your build.</span></h2>
+  <div class="contact-grid">
+    <div class="reveal d1">
+      <div class="c-item"><span class="c-label">Phone &amp; WhatsApp</span><a href="tel:9220559978" class="c-val">9220559978</a></div>
+      <div class="c-item"><span class="c-label">Email</span><a href="mailto:contact.greyprops@gmail.com" class="c-val">contact.greyprops@gmail.com</a></div>
+      <div class="c-item"><span class="c-label">Response time</span><span class="c-val c-note">Usually same day</span></div>
+      <div class="c-aside"><p>Whether you're after a <strong>single frame</strong>, a full build, or a custom flower-dropper for a wedding — just reach out. No bots. A real person writes back.</p></div>
+    </div>
+    <form class="cform reveal d2" onsubmit="handleSubmit(event)">
+      <div class="f-row"><span class="f-label">Name</span><input type="text" placeholder="Your name" required></div>
+      <div class="f-row"><span class="f-label">Phone</span><input type="tel" placeholder="+91 00000 00000"></div>
+      <div class="f-row"><span class="f-label">Message</span><textarea placeholder="What are you building? What do you need?" required></textarea></div>
+      <button type="submit" class="f-submit" id="submitBtn">Send message</button>
+      <div class="f-success" id="successMsg">✓ Message sent — we'll get back to you soon.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="foot-logo"><span class="foot-dot"></span>GreyProps</a>
+  <span class="foot-tag">Builds that take off.</span>
+  <span class="foot-tag">© 2025 GreyProps</span>
+</footer>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.reveal, .reveal-left').forEach(el => io.observe(el));
+
+// Parallax glow on scroll
+const glow = document.querySelector('.hero-glow');
+const grid = document.querySelector('.hero-grid');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (glow) glow.style.transform = `translate(-50%, calc(-50% + ${y * 0.15}px))`;
+  if (grid) grid.style.transform = `translate(${y * 0.02}px, ${y * 0.04}px)`;
+}, { passive: true });
+
+// Subtle tilt on service cards
+document.querySelectorAll('.svc').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = `perspective(600px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg) translateY(-2px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.5s var(--ease), background 0.35s var(--ease)';
+  });
+});
+
+// Form submit
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const success = document.getElementById('successMsg');
+  btn.textContent = 'Sending…'; btn.style.opacity = '0.5'; btn.disabled = true;
+  setTimeout(() => { btn.style.display = 'none'; success.style.display = 'block'; e.target.reset(); }, 1200);
+}
+</script>
+</body>
+</html>
